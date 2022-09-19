@@ -7,5 +7,6 @@ import { tokenValidationMiddleware } from "../middlewares/authValidationMiddlewa
 const router = Router();
 
 router.post("/tests", tokenValidationMiddleware, middleware(newTestSchema), testController.newTest);
+router.get("/tests/disciplines", tokenValidationMiddleware, testController.getTestsByDiscipline);
 
 export default router

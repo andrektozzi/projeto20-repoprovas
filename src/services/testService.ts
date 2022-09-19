@@ -30,3 +30,8 @@ export async function newTest(test: INewTest) {
 
   return registeredTest;
 }
+
+export async function getTestsByDiscipline() {
+  const tests = await testRepository.groupTestsByDiscipline();
+  return tests;
+}
