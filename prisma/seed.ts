@@ -19,18 +19,18 @@ async function main() {
   });
 
   await client.teachers.createMany({
-    data: [{ name: "Diego Pinho" }, { name: "Bruna Hamori" }],
+    data: [{ name: "André" }, { name: "Bruna" }],
     skipDuplicates: true,
   });
 
   await client.disciplines.createMany({
     data: [
-      { name: "HTML e CSS", termId: 1 },
+      { name: "HTML", termId: 1 },
       { name: "JavaScript", termId: 2 },
       { name: "React", termId: 3 },
-      { name: "Humildade", termId: 1 },
-      { name: "Planejamento", termId: 2 },
-      { name: "Autoconfiança", termId: 3 },
+      { name: "SQL", termId: 1 },
+      { name: "Typescript", termId: 2 },
+      { name: "NoSQL", termId: 3 },
     ],
     skipDuplicates: true,
   });
