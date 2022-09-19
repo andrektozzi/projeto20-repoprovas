@@ -6,6 +6,7 @@ import * as authSchemas from "../schemas/authSchema";
 const router = Router();
 
 router.post("/signup", middleware(authSchemas.signUpSchema), authController.signUp);
+router.post("/signin", middleware(authSchemas.signInSchema), authController.signIn);
 
 export default router;
 

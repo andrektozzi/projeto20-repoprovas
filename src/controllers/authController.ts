@@ -7,3 +7,10 @@ export async function signUp(req: Request, res: Response) {
     await authService.signUp(email, password);
     return res.status(201).send("Usuário cadastrado com sucesso!");
 }
+
+export async function signIn(req: Request, res: Response) {
+    const { email, password }: { email: string; password: string } = req.body;
+  
+    const token = await authService.signIn(email, password);
+    return res.status(200).send({ token });
+}
