@@ -2,6 +2,7 @@ import supertest from "supertest";
 import app from "../src/app";
 import client from "../src/dbStrategy/database";
 import userSignUpFactory from "./factories/userSignUpFactory";
+import userSignInFactory from "./factories/userSignInFactory";
 import { faker } from "@faker-js/faker";
 
 beforeEach(async () => {
@@ -57,4 +58,86 @@ describe("Test POST /signup", () => {
 
         expect(result.status).toBe(422);
     });
+});
+
+describe("Test POST /signin", () => {
+    it("Deve retornar status 200 se o usuário logar de forma correta", async () => {
+      const registeredUser = await userSignUpFactory();
+      await supertest(app).post(`/signup`).send(registeredUser);
+  
+      const user = await userSignInFactory(
+        registeredUser.email,
+        registeredUser.password
+      );
+  
+      const result = await supertest(app).post(`/signin`).send(user);
+      const { token } = result.body;
+  
+      expect(result.status).toBe(200);
+      expect(token).not.toBeNull();
+    });
+
+    it("Deve retornar status 401 se o usuário logar com email incorreto", async () => {
+        const registeredUser = await userSignUpFactory();
+        await supertest(app).post(`/signup`).send(registeredUser);
+        const email = faker.internet.email(); 
+    
+        const user = await userSignInFactory(
+          email,
+          registeredUser.password
+        );
+    
+        const result = await supertest(app).post(`/signin`).send(user);
+    
+        expect(result.status).toBe(401);
+    });
+
+    it("Deve retornar status 401 se o usuário logar com o password incorreto", async () => {
+        const registeredUser = await userSignUpFactory();
+        await supertest(app).post(`/signup`).send(registeredUser);
+        const password = faker.random.alphaNumeric(10); 
+    
+        const user = await userSignInFactory(
+          registeredUser.email,
+          password
+        );
+    
+        const result = await supertest(app).post(`/signin`).send(user);
+    
+        expect(result.status).toBe(401);
+    });
+
+    it("Deve retornar status 422 se o usuário logar sem email", async () => {
+        const registeredUser = await userSignUpFactory();
+        await supertest(app).post(`/signup`).send(registeredUser);
+        const email = '';
+        
+        const user = await userSignInFactory(
+          email,
+          registeredUser.password
+        );
+
+        const result = await supertest(app).post(`/signin`).send(user);
+
+        expect(result.status).toBe(422);
+    });
+
+    it("Deve retornar status 422 se o usuário logar sem password", async () => {
+        const registeredUser = await userSignUpFactory();
+        await supertest(app).post(`/signup`).send(registeredUser);
+        const password = '';
+        
+        const user = await userSignInFactory(
+          registeredUser.email,
+          password
+        );
+
+        const result = await supertest(app).post(`/signin`).send(user);
+
+        expect(result.status).toBe(422);
+    });
+});
+
+afterAll(async () => {
+    await client.$disconnect();
 });
