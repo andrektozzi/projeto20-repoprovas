@@ -35,3 +35,8 @@ export async function getTestsByDiscipline() {
   const tests = await testRepository.groupTestsByDiscipline();
   return tests;
 }
+
+export async function getTestsByTeacher() {
+  const tests = await testRepository.groupTestsByTeacher();
+  return tests;
+}
